@@ -33,6 +33,17 @@ travel along them. A couple of demo industries are shown on the grid.
    browser windows or share the URL with friends on the same network to play
 together.
 
+## Hosting on a Raspberry Pi
+
+Use the provided `host.sh` script to quickly run the server on a Raspberry Pi.
+Pass an optional port number to change the default (`3000`):
+
+```bash
+./host.sh 8080
+```
+
+If no port is supplied, the server listens on port 3000.
+
 ## Game controls
 
 - **Click** on a grid cell to place or remove a track tile.
