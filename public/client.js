@@ -27,11 +27,11 @@ let settings = {};
 // Compute track connections for a cell
 function getConnections(x, y) {
   const c = { n: false, e: false, s: false, w: false };
-  if (!grid[y] || grid[y][x] !== 1) return c;
-  if (y > 0 && grid[y - 1][x] === 1) c.n = true;
-  if (x < cols - 1 && grid[y][x + 1] === 1) c.e = true;
-  if (y < rows - 1 && grid[y + 1][x] === 1) c.s = true;
-  if (x > 0 && grid[y][x - 1] === 1) c.w = true;
+  if (!grid[y] || !grid[y][x]) return c;
+  if (y > 0 && grid[y - 1][x]) c.n = true;
+  if (x < cols - 1 && grid[y][x + 1]) c.e = true;
+  if (y < rows - 1 && grid[y + 1][x]) c.s = true;
+  if (x > 0 && grid[y][x - 1]) c.w = true;
   return c;
 }
 
@@ -44,9 +44,10 @@ function draw() {
     for (let x = 0; x < cols; x++) {
       ctx.strokeStyle = '#ddd';
       ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
-      if (grid[y] && grid[y][x] === 1) {
+      if (grid[y] && grid[y][x]) {
         const con = getConnections(x, y);
-        ctx.strokeStyle = '#444';
+        // Use the track owner's colour when drawing
+        ctx.strokeStyle = grid[y][x].color || '#444';
         ctx.lineWidth = cellSize * 0.1;
         ctx.beginPath();
         const cx = x * cellSize + cellSize / 2;
