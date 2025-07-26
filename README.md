@@ -18,6 +18,10 @@ share the same map and can place track tiles together in real time.
    ```
 
    The script installs all required Node.js packages.
+   If you are on **Windows**, open a terminal that can run shell scripts, such
+   as **Git Bash** or **WSL**, and execute the command above. If you prefer using
+   Command Prompt or PowerShell, run `npm install` manually instead of the
+   script.
 3. Start the server:
 
    ```bash
