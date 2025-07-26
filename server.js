@@ -12,8 +12,8 @@ app.use(express.static('public'));
 // Basic game state shared by all players
 const rows = 20;
 const cols = 20;
-// grid[y][x] == 1 indicates track present
-const grid = Array.from({ length: rows }, () => new Array(cols).fill(0));
+// Each grid cell is either null or an object like { owner, color }
+const grid = Array.from({ length: rows }, () => new Array(cols).fill(null));
 let money = 0;
 
 // Simple industries at fixed positions
@@ -27,7 +27,10 @@ const settings = {
   trainSpeed: 0.1,
 };
 
-// Map of socket.id -> player name
+// Predefined colours for players' tracks
+const playerColours = ['#ff0000', '#0000ff', '#00aa00', '#aa00aa', '#ff8800'];
+
+// Map of socket.id -> { name, colour }
 const players = new Map();
 
 // All active trains
@@ -38,7 +41,8 @@ const trains = [];
  * Returns the created train or null if no starting track.
  */
 function spawnTrain() {
-  if (grid[10][0] !== 1) return null;
+  // Starting cell must contain track to allow train spawning
+  if (!grid[10][0]) return null;
   const train = {
     x: 0,
     y: 10,
@@ -71,7 +75,7 @@ function moveTrain(train) {
 
   const nx = train.x + train.dx;
   const ny = train.y + train.dy;
-  if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && grid[ny][nx] === 1) {
+  if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && grid[ny][nx]) {
     train.x = nx;
     train.y = ny;
     train.progress = 0;
@@ -100,21 +104,30 @@ function moveTrain(train) {
 // When clients connect, register player and send current state
 io.on('connection', (socket) => {
   socket.on('register', (name) => {
-    players.set(socket.id, name || 'Anonymous');
-    io.emit('playerList', Array.from(players.values()));
+    // Assign a colour to the player based on join order
+    const colour = playerColours[players.size % playerColours.length];
+    players.set(socket.id, { name: name || 'Anonymous', color: colour });
+    io.emit('playerList', Array.from(players.values()).map((p) => p.name));
   });
 
   socket.emit('init', { grid, money, trains, industries, settings });
 
   socket.on('disconnect', () => {
     players.delete(socket.id);
-    io.emit('playerList', Array.from(players.values()));
+    io.emit('playerList', Array.from(players.values()).map((p) => p.name));
   });
 
   // Toggle a track tile and broadcast the new grid
   socket.on('toggleTrack', ({ x, y }) => {
     if (x >= 0 && x < cols && y >= 0 && y < rows) {
-      grid[y][x] = grid[y][x] === 1 ? 0 : 1;
+      if (grid[y][x]) {
+        // Remove existing track
+        grid[y][x] = null;
+      } else {
+        // Add new track owned by the player
+        const player = players.get(socket.id);
+        grid[y][x] = { owner: socket.id, color: player ? player.color : '#444' };
+      }
       io.emit('updateGrid', grid);
     }
   });
