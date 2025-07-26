@@ -2,7 +2,8 @@
 
 This project is a tiny demo inspired by **Transport Tycoon Deluxe**. It now
 supports multiple players connecting through a simple Socket.IO server. Players
-share the same map and can place track tiles together in real time.
+share the same map, build tracks with proper orientations and spawn trains that
+travel along them. A couple of demo industries are shown on the grid.
 
 ## Requirements
 
@@ -35,8 +36,9 @@ together.
 ## Game controls
 
 - **Click** on a grid cell to place or remove a track tile.
-- Press **Space** to start the train once the first cell has track.
-- The train generates $100 every time it reaches the end of the line.
+- Press **Space** to spawn a train on the existing track.
+- Each train that reaches a dead end earns $100.
+- Industries are displayed on the map and more than one player can join.
 
 ## Project structure
 
