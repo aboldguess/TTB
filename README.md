@@ -18,11 +18,10 @@ travel along them. A couple of demo industries are shown on the grid.
    ./setup.sh
    ```
 
-   The script installs all required Node.js packages.
-   If you are on **Windows**, open a terminal that can run shell scripts, such
-   as **Git Bash** or **WSL**, and execute the command above. If you prefer using
-   Command Prompt or PowerShell, run `npm install` manually instead of the
-   script.
+   The script installs all required Node.js packages. On **Windows** you can
+   either run it from a terminal that understands shell scripts (such as
+   **Git Bash** or **WSL**) or simply execute `npm install` manually. A
+   Windows-specific helper script `host.bat` is also provided for convenience.
 3. Start the server:
 
    ```bash
@@ -43,6 +42,18 @@ Pass an optional port number to change the default (`3000`):
 ```
 
 If no port is supplied, the server listens on port 3000.
+
+## Hosting on Windows
+
+Run the `host.bat` script to install dependencies, perform any available
+migrations or builds and start the server. An optional port argument sets the
+port (default is `3000`):
+
+```cmd
+host.bat 8080
+```
+
+Omit the argument to use the default port.
 
 ## Game controls
 
