@@ -34,11 +34,12 @@ together.
 
 ## Hosting on a Raspberry Pi
 
-Use the provided `host.sh` script to quickly run the server on a Raspberry Pi.
-Pass an optional port number to change the default (`3000`):
+Use the `rpi_ttb.sh` helper script to run the server on a Raspberry Pi.
+Pass `-p` to enable production mode and optionally specify a port number
+(default is `3000`):
 
 ```bash
-./host.sh 8080
+./rpi_ttb.sh -p 8080
 ```
 
 If no port is supplied, the server listens on port 3000.
